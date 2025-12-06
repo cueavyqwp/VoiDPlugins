@@ -30,8 +30,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        declare -a files
-        for file in $(ls ./build); do
-          files+=("./build/$file")
-        done
-        gh release create -d -t "VoiDPlugins v$TAG" "$TAG" "${files[@]}"
+        gh release create -d -t "WindowsInk v$TAG" "$TAG" ./build/WindowsInk.zip

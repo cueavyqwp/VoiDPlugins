@@ -8,7 +8,6 @@ declare -a extra_options
 dry_run="false"
 plugins=("WindowsInk")
 generate_zip="true"
-generate_sha256="true"
 clean_builds="true"
 sources="./src"
 
@@ -45,13 +44,6 @@ generate_zip() {
     local zip_name=${zip_file##*/}
 
     wrap_exec zip -rj "$zip_file" "$files"
-
-    if [ "$generate_sha256" = "true" ]; then
-        local abs_output="$(readlink -f $output)"
-        cd $(dirname "$zip_file")
-        wrap_exec 'sha256sum "$zip_name" >> "$abs_output/zip_hashes.sha256"'
-        cd "$orig_pwd"
-    fi
 
     if [ "$clean_builds" = "true" ]; then
         wrap_exec rm -rf "$files"
@@ -90,9 +82,6 @@ while [ $# -gt 0 ]; do
             ;;
         --no-zip)
             generate_zip="false"
-            ;;
-        --no-sha256)
-            generate_sha256="false"
             ;;
         --no-clean)
             clean_builds="false"
