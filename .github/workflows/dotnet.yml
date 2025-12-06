@@ -25,9 +25,6 @@ jobs:
       with:
         name: WindowsInk
         path: |
-          ./build/WindowsInk/*.dll
-          !./build/WindowsInk/*.json
-          !./build/WindowsInk/*.pdb
-          !./build/WindowsInk/OpenTabletDriver.Plugin.dll
-          !./build/WindowsInk/Newtonsoft.Json.dll
-          !./build/WindowsInk/HidSharpCore.dll
+          ./build/WindowsInk/WindowsInk.dll
+          ./build/WindowsInk/VMulti.dll
+          ./build/WindowsInk/VoiD.dll
