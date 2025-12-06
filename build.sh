@@ -2,11 +2,11 @@
 
 orig_pwd=$(pwd)
 config="Release"
-framework="net6.0"
+framework="net8.0"
 output="./build"
 declare -a extra_options
 dry_run="false"
-plugins=("Binding/ScriptRunner" "Filter/MeL" "Filter/PrecisionControl" "Filter/Reconstructor" "OutputMode/TouchEmu" "OutputMode/VMultiMode" "OutputMode/WindowsInk")
+plugins=("WindowsInk")
 generate_zip="true"
 generate_sha256="true"
 clean_builds="true"

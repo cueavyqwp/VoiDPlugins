@@ -5,16 +5,6 @@ on: [push, pull_request]
 jobs:
 
   Build:
-    strategy:
-      matrix:
-        include:
-          - { path: Binding, plugin: ScriptRunner }
-          - { path: Filter, plugin: MeL }
-          - { path: Filter, plugin: PrecisionControl }
-          - { path: Filter, plugin: Reconstructor }
-          - { path: OutputMode, plugin: TouchEmu }
-          - { path: OutputMode, plugin: VMultiMode }
-          - { path: OutputMode, plugin: WindowsInk }
 
     runs-on: ubuntu-latest
 
@@ -26,21 +16,18 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@main
       with:
-        dotnet-version: '6.0'
+        dotnet-version: '8.0'
 
     - name: Build
-      env:
-        path: ${{ matrix.path }} 
-        plugin: ${{ matrix.plugin }}
-      run: dotnet publish ./src/$path/$plugin --configuration Release --framework net6.0 -o ./build/$plugin
+      run: dotnet publish ./src/WindowsInk --configuration Release --framework net8.0 -o ./build/WindowsInk
 
     - uses: actions/upload-artifact@main
       with:
-        name: ${{ matrix.plugin }}
+        name: WindowsInk
         path: |
-          ./build/${{ matrix.plugin }}/*.dll
-          !./build/${{ matrix.plugin }}/*.json
-          !./build/${{ matrix.plugin }}/*.pdb
-          !./build/${{ matrix.plugin }}/OpenTabletDriver.Plugin.dll
-          !./build/${{ matrix.plugin }}/Newtonsoft.Json.dll
-          !./build/${{ matrix.plugin }}/HidSharpCore.dll
+          ./build/WindowsInk/*.dll
+          !./build/WindowsInk/*.json
+          !./build/WindowsInk/*.pdb
+          !./build/WindowsInk/OpenTabletDriver.Plugin.dll
+          !./build/WindowsInk/Newtonsoft.Json.dll
+          !./build/WindowsInk/HidSharpCore.dll
