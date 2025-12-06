@@ -94,11 +94,13 @@ namespace VoiDPlugins.OutputMode
 
         public void Flush()
         {
-            if (Dirty)
+            bool isTipPressed = SharedStore.Get<bool>(TIP_PRESSED);
+            // 处于按下状态时也应刷新
+            if (Dirty || isTipPressed)
             {
                 Dirty = false;
 
-                if (!SharedStore.Get<bool>(TIP_PRESSED))
+                if (!isTipPressed)
                     SetPressure(0);
 
                 if (ForcedSync)
