@@ -29,7 +29,6 @@ namespace VoiDPlugins.OutputMode
             var pos = Convert(_currentPoint);
             RawPointer->X = (ushort)pos.X;
             RawPointer->Y = (ushort)pos.Y;
-            Dirty = true;
         }
     }
 }

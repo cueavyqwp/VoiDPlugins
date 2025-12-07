@@ -20,7 +20,6 @@ namespace VoiDPlugins.OutputMode
         protected DigitizerInputReport* RawPointer { get; }
         protected VMultiInstance<DigitizerInputReport> Instance { get; }
         protected SharedStore SharedStore { get; }
-        protected bool Dirty { get; set; }
 
         public bool Sync
         {
@@ -94,19 +93,12 @@ namespace VoiDPlugins.OutputMode
 
         public void Flush()
         {
-            bool isTipPressed = SharedStore.Get<bool>(TIP_PRESSED);
-            // 处于按下状态时也应刷新
-            if (Dirty || isTipPressed)
-            {
-                Dirty = false;
+            if (!SharedStore.Get<bool>(TIP_PRESSED))
+                SetPressure(0);
 
-                if (!isTipPressed)
-                    SetPressure(0);
-
-                if (ForcedSync)
-                    SyncOSCursor();
-                Instance.Write();
-            }
+            if (ForcedSync)
+                SyncOSCursor();
+            Instance.Write();
         }
 
         protected Vector2 Convert(Vector2 pos)

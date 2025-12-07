@@ -24,7 +24,6 @@ namespace VoiDPlugins.OutputMode
             pos = Convert(pos);
             RawPointer->X = (ushort)pos.X;
             RawPointer->Y = (ushort)pos.Y;
-            Dirty = true;
             _prev = pos;
         }
     }
