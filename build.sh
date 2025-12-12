@@ -33,6 +33,7 @@ build_plugin() {
     local plugin="$1"
     local plugin_output="$2"
     wrap_exec dotnet publish "$sources/$plugin" -c $config -f $framework -o "$plugin_output" "${extra_options[@]}"
+    wrap_exec rm "$plugin_output/Newtonsoft.Json.dll"
     wrap_exec rm "$plugin_output/${plugin##*/}.deps.json"
     wrap_exec rm "$plugin_output/OpenTabletDriver.Plugin.dll"
     wrap_exec rm "$plugin_output/OpenTabletDriver.Plugin.pdb"
