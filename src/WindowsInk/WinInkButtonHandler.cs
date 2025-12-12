@@ -56,6 +56,7 @@ namespace VoiDPlugins.OutputMode
                     _sharedStore.Set(TIP_PRESSED, true);
                     _instance.EnableButtonBit((int)(eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press));
                     break;
+
                 case "Pen Button":
                     _sharedStore.Set(TIP_PRESSED, true);
                     _instance.EnableButtonBit((int)(WindowsInkButtonFlags.Barrel | (eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press)));
@@ -85,6 +86,7 @@ namespace VoiDPlugins.OutputMode
                     _sharedStore.Set(TIP_PRESSED, false);
                     _instance.DisableButtonBit((int)(WindowsInkButtonFlags.Press | WindowsInkButtonFlags.Eraser));
                     break;
+
                 case "Pen Button":
                     _sharedStore.Set(TIP_PRESSED, false);
                     _instance.DisableButtonBit((int)(WindowsInkButtonFlags.Barrel | WindowsInkButtonFlags.Press | WindowsInkButtonFlags.Eraser));
