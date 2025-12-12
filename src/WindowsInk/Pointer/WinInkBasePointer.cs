@@ -10,7 +10,7 @@ using static VoiDPlugins.OutputMode.WindowsInkConstants;
 
 namespace VoiDPlugins.OutputMode
 {
-    public unsafe abstract class WinInkBasePointer : IPressureHandler, ITiltHandler, IEraserHandler, ISynchronousPointer
+    public unsafe abstract class WinInkBasePointer : IPressureHandler, ITiltHandler, IEraserHandler, ISynchronousPointer, IPenActionHandler
     {
         private readonly Vector2 _conversionFactor;
         private readonly int _pressureConv;
@@ -115,5 +115,22 @@ namespace VoiDPlugins.OutputMode
         {
             _osPointer?.SetPosition(_internalPos);
         }
+        public void Activate(PenAction action)
+        {
+            Instance.EnableButtonBit(GetFlag(action));
+        }
+
+        public void Deactivate(PenAction action)
+        {
+            Instance.DisableButtonBit(GetFlag(action));
+
+        }
+
+        private static int GetFlag(PenAction action) => action switch
+        {
+            PenAction.Tip => (int)WindowsInkButtonFlags.Press,
+            PenAction.Eraser => (int)WindowsInkButtonFlags.Eraser,
+            _ => (int)WindowsInkButtonFlags.Barrel,
+        };
     }
 }
