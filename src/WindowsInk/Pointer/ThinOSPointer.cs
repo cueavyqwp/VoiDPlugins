@@ -50,8 +50,8 @@ namespace VoiDPlugins.OutputMode
     public class ThinOSPointer
     {
         private readonly Vector2 _conversion;
-        private readonly INPUT[] _inputs = new INPUT[]
-        {
+        private readonly INPUT[] _inputs =
+        [
             new INPUT
             {
                 type = INPUT_TYPE.MOUSE_INPUT,
@@ -61,7 +61,7 @@ namespace VoiDPlugins.OutputMode
                     dwExtraInfo = UIntPtr.Zero
                 }
             }
-        };
+        ];
 
         public ThinOSPointer(IVirtualScreen screen)
         {

@@ -15,48 +15,48 @@ namespace VoiDPlugins.Library
 
         public RingBuffer(int size)
         {
-            this.Size = size;
-            this.dataStream = new T[size];
+            Size = size;
+            dataStream = new T[size];
         }
 
         public void Insert(T item)
         {
-            this.dataStream[this.head++] = item;
-            if (this.head == this.Size)
+            dataStream[head++] = item;
+            if (head == Size)
             {
-                this.head = 0;
-                this.IsFilled = true;
+                head = 0;
+                IsFilled = true;
             }
         }
 
         public void Clear()
         {
-            this.dataStream = new T[this.Size];
-            this.head = 0;
-            this.IsFilled = false;
+            dataStream = new T[Size];
+            head = 0;
+            IsFilled = false;
         }
 
         private int Wrap(int index)
         {
-            return (index + this.Size) % this.Size;
+            return (index + Size) % Size;
         }
 
         IEnumerator<T> RingGetEnumerator()
         {
-            if (this.head == 0 || !this.IsFilled)
+            if (head == 0 || !IsFilled)
             {
-                foreach (var item in this.dataStream)
+                foreach (var item in dataStream)
                 {
                     yield return item;
                 }
             }
             else
             {
-                foreach (var item in this.dataStream[this.head..^0])
+                foreach (var item in dataStream[head..^0])
                 {
                     yield return item;
                 }
-                foreach (var item in this.dataStream[0..this.head])
+                foreach (var item in dataStream[0..head])
                 {
                     yield return item;
                 }
@@ -65,19 +65,19 @@ namespace VoiDPlugins.Library
 
         public T this[int index]
         {
-            get => this.dataStream[Wrap(index + this.head)];
-            set => this.dataStream[Wrap(index + this.head)] = value;
+            get => dataStream[Wrap(index + head)];
+            set => dataStream[Wrap(index + head)] = value;
         }
 
         public T this[Index index]
         {
-            get => this.dataStream[Wrap(index.IsFromEnd ? Wrap(this.head - index.Value) : Wrap(index.Value + this.head))];
-            set => this.dataStream[Wrap(index.IsFromEnd ? Wrap(this.head - index.Value) : Wrap(index.Value + this.head))] = value;
+            get => dataStream[Wrap(index.IsFromEnd ? Wrap(head - index.Value) : Wrap(index.Value + head))];
+            set => dataStream[Wrap(index.IsFromEnd ? Wrap(head - index.Value) : Wrap(index.Value + head))] = value;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            if (!this.IsFilled)
+            if (!IsFilled)
                 return ((IEnumerable<T>)dataStream).GetEnumerator();
             else
                 return RingGetEnumerator();

@@ -14,13 +14,13 @@ namespace VoiDPlugins.OutputMode
         private VMultiInstance _instance = null!;
         private SharedStore _sharedStore = null!;
 
-        public static string[] ValidButtons { get; } = new string[]
-        {
+        public static string[] ValidButtons { get; } =
+        [
             "Pen Tip",
             "Pen Button",
             "Eraser (Toggle)",
             "Eraser (Hold)"
-        };
+        ];
 
         [Property("Button"), PropertyValidated(nameof(ValidButtons))]
         public string? Button { get; set; }
