@@ -50,24 +50,15 @@ namespace VoiDPlugins.OutputMode
 
             var eraserState = _sharedStore.Get<bool>(ERASER_STATE);
 
-            // Pen Behavior
-            // Enforce a click behavior when either the Pen Tip or Pen Button is pressed.
-            // This is particularly useful for the Pen Button, enabling right-click functionality while hovering.
-            // The default Windows Ink behavior is unintuitive:
-            //   - First, the user must press the Pen Button.
-            //   - Then, press the Pen Tip.
-            // This sequence is unacceptable in certain 3D applications where precise and immediate input is required.
-
-            if (Button != null && Button.Contains("Pen"))
-            {
-                _sharedStore.Set(TIP_PRESSED, true);
-                _instance.EnableButtonBit((int)(eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press));
-            }
-
             switch (Button)
             {
+                case "Pen Tip":
+                    _sharedStore.Set(TIP_PRESSED, true);
+                    _instance.EnableButtonBit((int)(eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press));
+                    break;
                 case "Pen Button":
-                    _instance.EnableButtonBit((int)WindowsInkButtonFlags.Barrel);
+                    _sharedStore.Set(TIP_PRESSED, true);
+                    _instance.EnableButtonBit((int)(WindowsInkButtonFlags.Barrel | (eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press)));
                     break;
 
                 case "Eraser (Toggle)":
@@ -88,18 +79,15 @@ namespace VoiDPlugins.OutputMode
             if (_instance == null)
                 return;
 
-            // Refer to the comment in the Press() method for details on enforcing consistent behavior
-            // between Pen Tip and Pen Button inputs.
-            if (Button != null && Button.Contains("Pen"))
-            {
-                _sharedStore.Set(TIP_PRESSED, false);
-                _instance.DisableButtonBit((int)(WindowsInkButtonFlags.Press | WindowsInkButtonFlags.Eraser));
-            }
-
             switch (Button)
             {
+                case "Pen Tip":
+                    _sharedStore.Set(TIP_PRESSED, false);
+                    _instance.DisableButtonBit((int)(WindowsInkButtonFlags.Press | WindowsInkButtonFlags.Eraser));
+                    break;
                 case "Pen Button":
-                    _instance.DisableButtonBit((int)WindowsInkButtonFlags.Barrel);
+                    _sharedStore.Set(TIP_PRESSED, false);
+                    _instance.DisableButtonBit((int)(WindowsInkButtonFlags.Barrel | WindowsInkButtonFlags.Press | WindowsInkButtonFlags.Eraser));
                     break;
 
                 case "Eraser (Hold)":

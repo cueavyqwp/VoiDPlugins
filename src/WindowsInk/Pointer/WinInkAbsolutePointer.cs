@@ -5,14 +5,9 @@ using OpenTabletDriver.Plugin.Tablet;
 
 namespace VoiDPlugins.OutputMode
 {
-    public unsafe class WinInkAbsolutePointer : WinInkBasePointer, IAbsolutePointer
+    public unsafe class WinInkAbsolutePointer(TabletReference tabletReference, IVirtualScreen screen) : WinInkBasePointer("Windows Ink", tabletReference, screen), IAbsolutePointer
     {
         private Vector2 _prev;
-
-        public WinInkAbsolutePointer(TabletReference tabletReference, IVirtualScreen screen)
-            : base("Windows Ink", tabletReference, screen)
-        {
-        }
 
         public void SetPosition(Vector2 pos)
         {

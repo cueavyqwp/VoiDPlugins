@@ -47,9 +47,9 @@ namespace VoiDPlugins.OutputMode
         HARDWARE_INPUT
     }
 
-    public class ThinOSPointer
+    public partial class ThinOSPointer(IVirtualScreen screen)
     {
-        private readonly Vector2 _conversion;
+        private readonly Vector2 _conversion = new Vector2(screen.Width, screen.Height) / 65535;
         private readonly INPUT[] _inputs =
         [
             new INPUT
@@ -63,11 +63,6 @@ namespace VoiDPlugins.OutputMode
             }
         ];
 
-        public ThinOSPointer(IVirtualScreen screen)
-        {
-            _conversion = new Vector2(screen.Width, screen.Height) / 65535;
-        }
-
         public void SetPosition(Vector2 pos)
         {
             var converted = pos / _conversion;
@@ -78,7 +73,7 @@ namespace VoiDPlugins.OutputMode
             _ = SendInput(1, _inputs, INPUT.Size);
         }
 
-        [DllImport("user32.dll")]
-        private static extern uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs, int cbSize);
+        [LibraryImport("user32.dll")]
+        private static partial uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs, int cbSize);
     }
 }
