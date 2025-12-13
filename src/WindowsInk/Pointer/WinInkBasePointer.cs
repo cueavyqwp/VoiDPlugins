@@ -15,22 +15,16 @@ namespace VoiDPlugins.OutputMode
         private readonly Vector2 _conversionFactor;
         private readonly int _pressureConv;
         private readonly IVirtualScreen _screen;
-        private ThinOSPointer? _osPointer;
+        protected ThinOSPointer _osPointer;
         private Vector2 _internalPos;
         protected DigitizerInputReport* RawPointer { get; }
         protected VMultiInstance<DigitizerInputReport> Instance { get; }
         protected SharedStore SharedStore { get; }
 
-        public bool Sync
-        {
-            set => _osPointer = value ? new ThinOSPointer(_screen) : null;
-        }
-
-        public bool ForcedSync { get; set; }
-
         public WinInkBasePointer(string name, TabletReference tabletReference, IVirtualScreen screen)
         {
             _screen = screen;
+            _osPointer = new ThinOSPointer(_screen);
             _conversionFactor = new Vector2(32767, 32767) / new Vector2(screen.Width, screen.Height);
             SharedStore = SharedStore.GetStore(tabletReference, STORE_KEY);
             Instance = SharedStore.GetOrUpdate(INSTANCE, createInstance, out var updated);
@@ -87,17 +81,13 @@ namespace VoiDPlugins.OutputMode
 
         public void Reset()
         {
-            if (_osPointer is not null && !ForcedSync)
-                SyncOSCursor();
+            SyncOSCursor();
         }
 
         public void Flush()
         {
             if (!SharedStore.Get<bool>(TIP_PRESSED))
                 SetPressure(0);
-
-            if (ForcedSync)
-                SyncOSCursor();
             Instance.Write();
         }
 
@@ -113,7 +103,7 @@ namespace VoiDPlugins.OutputMode
 
         private void SyncOSCursor()
         {
-            _osPointer?.SetPosition(_internalPos);
+            _osPointer.SetPosition(_internalPos);
         }
         public void Activate(PenAction action)
         {
