@@ -23,7 +23,7 @@ namespace VoiDPlugins.OutputMode
         ];
 
         [Property("Button"), PropertyValidated(nameof(ValidButtons))]
-        public string? Button { get; set; }
+        public required string Button { get; set; }
 
         [TabletReference]
         public TabletReference Reference { set => Initialize(value); }
@@ -37,9 +37,7 @@ namespace VoiDPlugins.OutputMode
             }
             catch
             {
-                Log.WriteNotify("WinInk",
-                          "Windows Ink bindings are being used without an active Windows Ink output mode.",
-                          LogLevel.Error);
+                Log.WriteNotify("WinInk", "Windows Ink bindings are being used without an active Windows Ink output mode.", LogLevel.Error);
             }
         }
 
@@ -133,5 +131,6 @@ namespace VoiDPlugins.OutputMode
                 report->Pressure = pressure;
             }
         }
+        public override string ToString() => $"Windows Ink: {Button}";
     }
 }

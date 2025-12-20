@@ -14,6 +14,13 @@ namespace VoiDPlugins.OutputMode
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+        public int X;
+        public int Y;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct MOUSEINPUT
     {
         public int dx;
@@ -75,5 +82,13 @@ namespace VoiDPlugins.OutputMode
 
         [LibraryImport("user32.dll")]
         private static partial uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs, int cbSize);
+        [LibraryImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool GetCursorPos(out POINT lpPoint);
+        public static Vector2 GetCursorPos()
+        {
+            GetCursorPos(out POINT point);
+            return new Vector2(point.X, point.Y);
+        }
     }
 }
