@@ -1,4 +1,4 @@
-namespace VoiDPlugins.OutputMode
+namespace VoiDPlugins.WindowsInk
 {
     public static class WindowsInkConstants
     {

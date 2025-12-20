@@ -3,7 +3,7 @@ using OpenTabletDriver.Plugin.Platform.Display;
 using OpenTabletDriver.Plugin.Platform.Pointer;
 using OpenTabletDriver.Plugin.Tablet;
 
-namespace VoiDPlugins.OutputMode
+namespace VoiDPlugins.WindowsInk
 {
     public unsafe class WinInkAbsolutePointer(TabletReference tabletReference, IVirtualScreen screen) : WinInkBasePointer("Windows Ink", tabletReference, screen), IAbsolutePointer
     {

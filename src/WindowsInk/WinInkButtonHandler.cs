@@ -4,9 +4,9 @@ using OpenTabletDriver.Plugin.Tablet;
 using VoiDPlugins.Library.VMulti;
 using VoiDPlugins.Library.VMulti.Device;
 using VoiDPlugins.Library.VoiD;
-using static VoiDPlugins.OutputMode.WindowsInkConstants;
+using static VoiDPlugins.WindowsInk.WindowsInkConstants;
 
-namespace VoiDPlugins.OutputMode
+namespace VoiDPlugins.WindowsInk
 {
     [PluginName("Windows Ink")]
     public unsafe partial class WindowsInkButtonHandler : IStateBinding

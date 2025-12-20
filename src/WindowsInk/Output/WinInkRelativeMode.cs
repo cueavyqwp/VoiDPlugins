@@ -6,7 +6,7 @@ using OpenTabletDriver.Plugin.Platform.Display;
 using OpenTabletDriver.Plugin.Platform.Pointer;
 using OpenTabletDriver.Plugin.Tablet;
 
-namespace VoiDPlugins.OutputMode
+namespace VoiDPlugins.WindowsInk
 {
     [PluginName("Windows Ink Relative Mode")]
     public class WinInkRelativeMode : RelativeOutputMode

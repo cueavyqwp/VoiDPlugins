@@ -1,6 +1,6 @@
 using System;
 
-namespace VoiDPlugins.OutputMode
+namespace VoiDPlugins.WindowsInk
 {
     [Flags]
     public enum WindowsInkButtonFlags : byte
