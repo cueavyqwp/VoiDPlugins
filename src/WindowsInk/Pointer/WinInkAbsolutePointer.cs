@@ -15,7 +15,6 @@ namespace VoiDPlugins.WindowsInk
                 return;
             _prev = pos;
 
-            SetInternalPosition(pos);
             Instance.EnableButtonBit((int)WindowsInkButtonFlags.InRange);
             pos = Convert(pos);
             RawPointer->X = (ushort)pos.X;

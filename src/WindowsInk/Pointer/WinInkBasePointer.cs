@@ -16,7 +16,6 @@ namespace VoiDPlugins.WindowsInk
         private readonly int _pressureConv;
         private readonly IVirtualScreen _screen;
         protected ThinOSPointer _osPointer;
-        private Vector2 _internalPos;
         protected DigitizerInputReport* RawPointer { get; }
         protected VMultiInstance<DigitizerInputReport> Instance { get; }
         protected SharedStore SharedStore { get; }
@@ -96,14 +95,9 @@ namespace VoiDPlugins.WindowsInk
             return pos * _conversionFactor;
         }
 
-        protected void SetInternalPosition(Vector2 pos)
-        {
-            _internalPos = pos;
-        }
-
         private void SyncOSCursor()
         {
-            _osPointer.SetPosition(_internalPos);
+            _osPointer.SetPosition(ThinOSPointer.GetCursorPos());
         }
         public void Activate(PenAction action)
         {
