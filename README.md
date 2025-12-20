@@ -14,9 +14,11 @@ This fork will focus on WindowsInk plugin
 
 # Fixes and improvement
 
-- Merged the [WindowsInk: improve Pen Button behavior (right click hover) #55](https://github.com/X9VoiD/VoiDPlugins/pull/55)
+- Enforce click ( [WindowsInk: improve Pen Button behavior (right click hover) #55](https://github.com/X9VoiD/VoiDPlugins/pull/55) )
 
 - Fix the focus issue
+
+- Support the Adaptive Binding
 
 # Using
 
