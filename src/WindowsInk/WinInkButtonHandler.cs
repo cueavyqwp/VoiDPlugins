@@ -1,5 +1,6 @@
 using OpenTabletDriver.Plugin;
 using OpenTabletDriver.Plugin.Attributes;
+using OpenTabletDriver.Plugin.Platform.Pointer;
 using OpenTabletDriver.Plugin.Tablet;
 using VoiDPlugins.Library.VMulti;
 using VoiDPlugins.Library.VMulti.Device;
@@ -18,8 +19,7 @@ namespace VoiDPlugins.WindowsInk
         [
             "Pen Tip",
             "Pen Button",
-            "Eraser (Toggle)",
-            "Eraser (Hold)"
+            "Eraser"
         ];
 
         [Property("Button"), PropertyValidated(nameof(ValidButtons))]
@@ -45,59 +45,79 @@ namespace VoiDPlugins.WindowsInk
         {
             if (_instance == null)
                 return;
-
-            var eraserState = _sharedStore.Get<bool>(ERASER_STATE);
-
-            switch (Button)
-            {
-                case "Pen Tip":
-                    _sharedStore.Set(TIP_PRESSED, true);
-                    _instance.EnableButtonBit((int)(eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press));
-                    break;
-
-                case "Pen Button":
-                    _sharedStore.Set(TIP_PRESSED, true);
-                    _instance.EnableButtonBit((int)(WindowsInkButtonFlags.Barrel | (eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press)));
-                    break;
-
-                case "Eraser (Toggle)":
-                    _sharedStore.Set(MANUAL_ERASER, !eraserState);
-                    EraserStateTransition(_sharedStore, _instance, !eraserState);
-                    break;
-
-                case "Eraser (Hold)":
-                    _sharedStore.Set(MANUAL_ERASER, true);
-                    EraserStateTransition(_sharedStore, _instance, true);
-                    break;
-            }
-            _instance.Write();
+            SetAction(Button, true);
         }
 
         public void Release(TabletReference tablet, IDeviceReport report)
         {
             if (_instance == null)
                 return;
-
-            switch (Button)
+            SetAction(Button, false);
+        }
+        public void Activate(PenAction action)
+        {
+            SetAction(action, true);
+        }
+        public void Deactivate(PenAction action)
+        {
+            SetAction(action, false);
+        }
+        private void SetAction(PenAction action, bool isActive = true)
+        {
+            SetAction(_sharedStore, _instance, action, isActive);
+        }
+        public static void SetAction(SharedStore store, VMultiInstance instance, PenAction action, bool isActive = true)
+        {
+            bool eraserState = store.Get<bool>(ERASER_STATE);
+            bool update = true;
+            int flags = 0;
+            switch (action)
             {
-                case "Pen Tip":
-                    _sharedStore.Set(TIP_PRESSED, false);
-                    _instance.DisableButtonBit((int)(WindowsInkButtonFlags.Press | WindowsInkButtonFlags.Eraser));
+                case PenAction.Tip:
+                    store.Set(TIP_PRESSED, isActive);
+                    flags = (int)(eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press);
                     break;
-
-                case "Pen Button":
-                    _sharedStore.Set(TIP_PRESSED, false);
-                    _instance.DisableButtonBit((int)(WindowsInkButtonFlags.Barrel | WindowsInkButtonFlags.Press | WindowsInkButtonFlags.Eraser));
+                case PenAction.Eraser:
+                    if (!WinInkToolHandler.ToggleEraser)
+                    {
+                        store.Set(MANUAL_ERASER, isActive);
+                        EraserStateTransition(store, instance, isActive);
+                    }
+                    else if (isActive)
+                    {
+                        store.Set(MANUAL_ERASER, !eraserState);
+                        EraserStateTransition(store, instance, !eraserState);
+                    }
+                    update = false;
                     break;
-
-                case "Eraser (Hold)":
-                    _sharedStore.Set(MANUAL_ERASER, false);
-                    EraserStateTransition(_sharedStore, _instance, false);
+                default:
+                    if (WinInkToolHandler.EnforceClick)
+                    {
+                        store.Set(TIP_PRESSED, isActive);
+                        flags = (int)((eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press) | WindowsInkButtonFlags.Barrel);
+                    }
+                    else
+                        flags = (int)WindowsInkButtonFlags.Barrel;
                     break;
             }
-            _instance.Write();
+            if (update)
+            {
+                if (isActive)
+                    instance.EnableButtonBit(flags);
+                else
+                    instance.DisableButtonBit(flags);
+            }
+            instance.Write();
         }
-
+        public void SetAction(string button, bool isActive = true)
+        {
+            SetAction(button switch
+            {
+                "Pen Tip" => PenAction.Tip,
+                "Eraser" => PenAction.Eraser,
+                _ => PenAction.BarrelButton1,
+            }, isActive);
+        }
         internal static void EraserStateTransition(SharedStore store, VMultiInstance instance, bool isEraser)
         {
             var eraserState = store.Get<bool>(ERASER_STATE);

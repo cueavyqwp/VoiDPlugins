@@ -44,7 +44,7 @@ Select `Windows Ink` for the `Binding Type`
 
 Bind `Tip Binding` to `Pen Tip`
 
-Bind `Eraser Binding` to `Eraser (Toggle)` or `Eraser (Hold)`
+Bind `Eraser Binding` to `Eraser`
 
 Bind `Pen Buttons` as you need
 

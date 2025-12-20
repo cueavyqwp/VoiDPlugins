@@ -2,6 +2,7 @@ using System.Numerics;
 using OpenTabletDriver.Plugin;
 using OpenTabletDriver.Plugin.Platform.Display;
 using OpenTabletDriver.Plugin.Platform.Pointer;
+using OpenTabletDriver.Plugin.Attributes;
 using OpenTabletDriver.Plugin.Tablet;
 using VoiDPlugins.Library.VMulti;
 using VoiDPlugins.Library.VMulti.Device;
@@ -80,7 +81,7 @@ namespace VoiDPlugins.WindowsInk
 
         public void Reset()
         {
-            SyncOSCursor();
+            _osPointer.SetPosition(ThinOSPointer.GetCursorPos());
         }
 
         public void Flush()
@@ -95,26 +96,14 @@ namespace VoiDPlugins.WindowsInk
             return pos * _conversionFactor;
         }
 
-        private void SyncOSCursor()
-        {
-            _osPointer.SetPosition(ThinOSPointer.GetCursorPos());
-        }
         public void Activate(PenAction action)
         {
-            Instance.EnableButtonBit(GetFlag(action));
+            WindowsInkButtonHandler.SetAction(SharedStore, Instance, action, true);
         }
 
         public void Deactivate(PenAction action)
         {
-            Instance.DisableButtonBit(GetFlag(action));
-
+            WindowsInkButtonHandler.SetAction(SharedStore, Instance, action, false);
         }
-
-        private static int GetFlag(PenAction action) => action switch
-        {
-            PenAction.Tip => (int)WindowsInkButtonFlags.Press,
-            PenAction.Eraser => (int)WindowsInkButtonFlags.Eraser,
-            _ => (int)WindowsInkButtonFlags.Barrel,
-        };
     }
 }
