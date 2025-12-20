@@ -13,13 +13,13 @@ namespace VoiDPlugins.WindowsInk
         {
             if (pos == _prev)
                 return;
+            _prev = pos;
 
             SetInternalPosition(pos);
             Instance.EnableButtonBit((int)WindowsInkButtonFlags.InRange);
             pos = Convert(pos);
             RawPointer->X = (ushort)pos.X;
             RawPointer->Y = (ushort)pos.Y;
-            _prev = pos;
         }
     }
 }
