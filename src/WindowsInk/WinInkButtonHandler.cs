@@ -19,7 +19,8 @@ namespace VoiDPlugins.WindowsInk
         [
             "Pen Tip",
             "Pen Button",
-            "Eraser"
+            "Eraser",
+            "Eraser (Toggle)"
         ];
 
         [Property("Button"), PropertyValidated(nameof(ValidButtons))]
@@ -62,11 +63,11 @@ namespace VoiDPlugins.WindowsInk
         {
             SetAction(action, false);
         }
-        private void SetAction(PenAction action, bool isActive = true)
+        private void SetAction(PenAction action, bool isActive = true, bool ToggleEraser = false)
         {
-            SetAction(_sharedStore, _instance, action, isActive);
+            SetAction(_sharedStore, _instance, action, isActive, ToggleEraser);
         }
-        public static void SetAction(SharedStore store, VMultiInstance instance, PenAction action, bool isActive = true)
+        public static void SetAction(SharedStore store, VMultiInstance instance, PenAction action, bool isActive = true, bool ToggleEraser = false)
         {
             bool eraserState = store.Get<bool>(ERASER_STATE);
             bool update = true;
@@ -78,7 +79,7 @@ namespace VoiDPlugins.WindowsInk
                     flags = (int)(eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press);
                     break;
                 case PenAction.Eraser:
-                    if (!WinInkToolHandler.ToggleEraser)
+                    if (ToggleEraser)
                     {
                         store.Set(MANUAL_ERASER, isActive);
                         EraserStateTransition(store, instance, isActive);
@@ -115,8 +116,9 @@ namespace VoiDPlugins.WindowsInk
             {
                 "Pen Tip" => PenAction.Tip,
                 "Eraser" => PenAction.Eraser,
+                "Eraser (Toggle)" => PenAction.Eraser,
                 _ => PenAction.BarrelButton1,
-            }, isActive);
+            }, isActive, button == "Eraser (Toggle)");
         }
         internal static void EraserStateTransition(SharedStore store, VMultiInstance instance, bool isEraser)
         {
