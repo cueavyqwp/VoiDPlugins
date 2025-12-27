@@ -14,7 +14,7 @@ namespace VoiDPlugins.WindowsInk
             : base("Windows Ink", tabletReference, screen)
         {
             _maxPoint = new Vector2(screen.Width, screen.Height);
-            _currentPoint = Vector2.Clamp(ThinOSPointer.GetCursorPos(), Vector2.Zero, _maxPoint);
+            _currentPoint = ThinOSPointer.GetCursorPos();
         }
 
         public void SetPosition(Vector2 delta)

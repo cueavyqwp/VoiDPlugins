@@ -14,7 +14,6 @@ namespace VoiDPlugins.WindowsInk
         {
             GC.SuppressFinalize(this);
         }
-
         public bool Initialize()
         {
             return true;

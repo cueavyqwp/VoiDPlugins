@@ -67,7 +67,7 @@ namespace VoiDPlugins.WindowsInk
         {
             SetAction(_sharedStore, _instance, action, isActive, ToggleEraser);
         }
-        public static void SetAction(SharedStore store, VMultiInstance instance, PenAction action, bool isActive = true, bool ToggleEraser = false)
+        public static void SetAction(SharedStore store, VMultiInstance instance, PenAction action, bool isActive = true, bool isToggleEraser = false)
         {
             bool eraserState = store.Get<bool>(ERASER_STATE);
             bool update = true;
@@ -79,7 +79,7 @@ namespace VoiDPlugins.WindowsInk
                     flags = (int)(eraserState ? WindowsInkButtonFlags.Eraser : WindowsInkButtonFlags.Press);
                     break;
                 case PenAction.Eraser:
-                    if (ToggleEraser)
+                    if (!isToggleEraser)
                     {
                         store.Set(MANUAL_ERASER, isActive);
                         EraserStateTransition(store, instance, isActive);

@@ -7,7 +7,7 @@ namespace VoiDPlugins.WindowsInk
 {
     public unsafe class WinInkAbsolutePointer(TabletReference tabletReference, IVirtualScreen screen) : WinInkBasePointer("Windows Ink", tabletReference, screen), IAbsolutePointer
     {
-        private Vector2 _prev;
+        private Vector2 _prev = ThinOSPointer.GetCursorPos();
 
         public void SetPosition(Vector2 pos)
         {
